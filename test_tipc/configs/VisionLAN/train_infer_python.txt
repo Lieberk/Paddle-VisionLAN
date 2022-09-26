@@ -1,0 +1,32 @@
+===========================train_params===========================
+model_name:VisionLAN
+python:python3.7
+gpu_list:0
+use_gpu:True|False
+--epochs:lite_train_lite_infer=3
+--output_dir:
+--batch_size:lite_train_lite_infer=5
+--pretrained:
+train_model_name:best_acc_M.pdparams
+--data_path:./lite_data
+##
+trainer:norm_train
+norm_train:train.py --data_path=./lite_data --test_batch_size=1 --show_interval=2 --test_interval=5 --output_dir=./test_tipc/output/
+##
+===========================eval_params===========================
+eval:eval.py --data_path ./lite_data  --pretrained './test_tipc/output/best_acc_M.pdparams'
+##
+===========================infer_params===========================
+--save_inference_dir:./test_tipc/output/visionlan_small_infer/
+--pretrained:
+norm_export:deploy/export_model.py 
+##
+train_model:./test_tipc/output/best_acc_M.pdparams
+infer_export:deploy/export_model.py
+##
+inference:deploy/infer.py
+--use_gpu:True|False
+--batch_size:1
+--model_dir:./test_tipc/output/visionlan_small_infer/
+--img_path:./images/demo1.png
+--benchmark:False

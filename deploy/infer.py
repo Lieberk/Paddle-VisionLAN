@@ -127,7 +127,7 @@ class InferenceEngine(object):
         Returns: Output data after predict.
         """
         output, out_length = x
-        test_acc_counter = Attention_AR_counter('\ntest accuracy: ', cfgs.dataset_cfgs,
+        test_acc_counter = Attention_AR_counter('\ntest accuracy: ', cfgs.dataset_cfgs['dict_dir'],
                                                 cfgs.dataset_cfgs['case_sensitive'])
         pre_string = test_acc_counter.convert(output, out_length)
         return pre_string

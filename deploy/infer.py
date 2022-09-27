@@ -167,6 +167,8 @@ def get_args(add_help=True):
     parser.add_argument(
         "--benchmark", default=False, type=str2bool, help="benchmark")
     parser.add_argument("--warmup", default=0, type=int, help="warmup iter")
+    parser.add_argument(
+        "--save_inference_dir", default="deploy", help="inference model dir")
     args = parser.parse_args()
     return args
 

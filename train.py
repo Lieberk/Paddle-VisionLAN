@@ -55,13 +55,6 @@ def flatten_label(target):
     return (label_flatten, label_length)
 
 
-def Train_or_Eval(model, state='Train'):
-    if state == 'Train':
-        model.train()
-    else:
-        model.eval()
-
-
 def Zero_Grad(model):
     model.clear_gradients()
 
@@ -82,7 +75,9 @@ def load_dataset():
 
 def load_network():
     if not cfgs.global_cfgs['cuda']: paddle.device.set_device("cpu")
+    paddle.distributed.init_parallel_env()
     model_VL = cfgs.net_cfgs['VisualLAN'](**cfgs.net_cfgs['args'])
+    model_VL = paddle.DataParallel(model_VL)
     if cfgs.net_cfgs['init_state_dict'] is not None:
         fe_state_dict_ori = paddle.load(cfgs.net_cfgs['init_state_dict'])
         fe_state_dict = OrderedDict()
@@ -116,7 +111,6 @@ def _flatten(sources, lengths):
 
 
 def _test(test_loader, model, tools, best_acc):
-    Train_or_Eval(model, 'Eval')
     for sample_batched in test_loader:
         data = sample_batched['image']
         label = sample_batched['label']
@@ -125,7 +119,6 @@ def _test(test_loader, model, tools, best_acc):
         output, out_length = model(data, target, '', False)
         tools[2].add_iter(output, out_length, length, label)
     best_acc, change = tools[2].show_test(best_acc)
-    Train_or_Eval(model, 'Train')
     return best_acc, change
 
 
@@ -210,7 +203,6 @@ if __name__ == '__main__':
             label_sub = sample_batched['label_sub']  # occluded character
             label_id = sample_batched['label_id']  # character index
             target = encdec.encode(label)
-            Train_or_Eval(model, 'Train')
             label_flatten, length = flatten_label(target)
             # prediction
             text_pre, text_rem, text_mas, att_mask_sub = model(data, label_id, cfgs.global_cfgs['step'])

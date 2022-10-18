@@ -96,15 +96,15 @@ datasets
 
 - Step 1 (LF_1): first train the vision model without MLM.
 
-`python train.py --cfg_type LF_1 --batch_size 384 --epochs 8 --output_dir './output/LF_1/'`
+`python -m paddle.distributed.launch -selected_gpus=0,1,2,3 train.py --cfg_type LF_1 --batch_size 384 --epochs 8 --output_dir './output/LF_1/'`
 
 - Step 2 (LF_2): finetune the MLM with vision model.
 
-`python train.py --cfg_type LF_2 --batch_size 220 --epochs 4 --output_dir './output/LF_2/' --pretrained './output/LF_1/best_acc_M.pdparams'`
+`python -m paddle.distributed.launch -selected_gpus=0,1,2,3 train.py --cfg_type LF_2 --batch_size 220 --epochs 4 --output_dir './output/LF_2/' --pretrained './output/LF_1/best_acc_M.pdparams'`
 
 #### Language-aware (LA) process
 
-`python train.py --cfg_type LA --batch_size 220 --epochs 8 --output_dir './output/LA/' --pretrained './output/LF_2/best_acc_M.pdparams'`
+`python -m paddle.distributed.launch -selected_gpus=0,1,2,3 train.py --cfg_type LA --batch_size 220 --epochs 8 --output_dir './output/LA/' --pretrained './output/LF_2/best_acc_M.pdparams'`
 
 部分训练日志如下所示：
 ```

@@ -27,7 +27,7 @@ dataset_cfgs = {
     'dataloader_train': {
         'batch_size': 384,
         'shuffle': True,
-        'num_workers': 0,
+        'num_workers': 4,
         'use_shared_memory': True,
     },
 
@@ -45,7 +45,7 @@ dataset_cfgs = {
     'dataloader_test': {
         'batch_size': 64,
         'shuffle': False,
-        'num_workers': 0,
+        'num_workers': 4,
         'use_shared_memory': True,
     },
     'case_sensitive': False,

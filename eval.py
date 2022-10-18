@@ -33,13 +33,6 @@ def flatten_label(target):
     return (label_flatten, label_length)
 
 
-def Train_or_Eval(model, state='Train'):
-    if state == 'Train':
-        model.train()
-    else:
-        model.eval()
-
-
 def load_dataset():
     train_data_set = cfgs.dataset_cfgs['dataset_train'](**cfgs.dataset_cfgs['dataset_train_args'])
     train_loader = DataLoader(train_data_set, **cfgs.dataset_cfgs['dataloader_train'])
@@ -85,7 +78,6 @@ def load_network():
 
 
 def _test(test_loader, model, tools, best_acc, string_name):
-    Train_or_Eval(model, 'Eval')
     print('------' + string_name + '--------')
     for sample_batched in test_loader:
         data = sample_batched['image']
@@ -95,7 +87,6 @@ def _test(test_loader, model, tools, best_acc, string_name):
         output, out_length = model(data, target, '', False)
         tools[2].add_iter(output, out_length, length, label)
     best_acc, change = tools[2].show_test(best_acc)
-    Train_or_Eval(model, 'Train')
     return best_acc, change
 
 
